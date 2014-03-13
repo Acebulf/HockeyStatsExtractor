@@ -10,3 +10,5 @@ Update March 12 2014: A high number of bugs are caused by the fact that the hock
 
 A partial rewrite is in order to have more maintaiable code and tone down the level of spaghetti-code and fatal bugs.
 
+Estimated time remaining: 2 weeks
+
