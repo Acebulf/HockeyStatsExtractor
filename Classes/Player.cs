@@ -3,136 +3,72 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 
 namespace StatsExtractorConsole2
 {
     class Player
     {
-        int MEMLocation;
-        public MemoryExtractor MemExt;
-        public bool inServer;
-        public int position;
-        public int team;
-        public bool[] team_played = { false, false };
+        static public Dictionary<string, Player> PlayerDict = null; //Holds all instances of players.
+        bool duplicate;
+
         public string name;
         public int goals;
         public int assists;
-        public bool onIce;
-        public bool hasPlayed = false;
-        public int plusminus = 0;
+        public int plusminus;
+        public int team;
+        public bool[] playedTeam = new bool[2]{false,false};
 
-        const int MEM_OFFSET_inServer = 0;
-        const int MEM_OFFSET_position = 4;
-        const int MEM_OFFSET_team = 8;
-        const int MEM_OFFSET_name = 20;
-        const int NAME_LEN = 24;
-        const int MEM_OFFSET_goals = 136;
-        const int MEM_OFFSET_assists = 140;
-        const int MEM_OFFSET_LEN = 152;
-        
-        [DllImport("kernel32.dll")]
-        public static extern bool ReadProcessMemory(int hProcess,
-          int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
-
-        public Player(int MEM_Location, MemoryExtractor MemoryExt)
+        static public void reinitialize()
+            //Resets the statics for a new game.
         {
-            MEMLocation = MEM_Location;
-            MemExt = MemoryExt;
+            PlayerDict = null;
+        }
 
-            refresh();
+        public void assignTeam(int _team)
+        {
+            team = _team;
+            playedTeam[team] = true;
+        }
 
-            if (team != -1)
+        static public bool addPlayerToList(Player player)
+        {
+            if (PlayerDict == null)
             {
-                onIce = true;
-                hasPlayed = true;
+                PlayerDict = new Dictionary<string, Player>();
+            }
+
+            if (!PlayerDict.ContainsKey(player.name))
+            {
+                PlayerDict.Add(player.name, player);
+                return false;
             }
             else
             {
-                onIce = false;
-            }
-        }
-
-        public int getTeam()
-        {
-            refresh();
-            if (team == 0 || team == 1)
-            {
-                team_played[team] = true;
-            }
-            return team;
-        }
-
-
-        public bool CheckPoints(ref bool goal, ref bool assist)
-        {
-            goal = false;
-            assist = false;
-
-            if (MemExt.getInt32(MEMLocation + MEM_OFFSET_goals) > goals)
-            {
-                goal = true;
-                refresh();
                 return true;
             }
-            if (MemExt.getInt32(MEMLocation + MEM_OFFSET_assists) > assists)
-            {
-                assist = true;
-                refresh();
-                return true;
-            }
-            return false;
         }
 
-        public bool checkOnIce()
+        public Player(string _name)
         {
-            inServer = MemExt.getBool(MEMLocation + MEM_OFFSET_inServer);
-            if (!inServer)
-            {
-                onIce = false;
-                refresh();
-                return false;
-            }
-
-            if (MemExt.getInt32(MEMLocation + MEM_OFFSET_team) != -1)
-            {
-                if (!onIce)
-                {
-                    refresh();
-                    Console.WriteLine("["+ Program.parseTime(MemExt) + "] - Player " + name + " has entered the ice.");
-                }
-                onIce = true;
-                return true;
-            }
-            else if (onIce)
-            {
-                Console.WriteLine("Player " + name + " has left the ice.");
-            }
-            onIce = false;
-            return false;
+            name = _name;
+            goals = 0;
+            assists = 0;
+            plusminus = 0;
+            duplicate = addPlayerToList(this);
         }
 
-        public void refresh()
+        public Player(string _name, int _goals, int _assists, int _plusminus)
         {
-            MemExt.getRefreshData(MEMLocation, 152);
-            inServer = MemExt.refreshBool(MEM_OFFSET_inServer);
-            position = MemExt.refreshInt32(MEM_OFFSET_position);
-            team = MemExt.refreshInt32(MEM_OFFSET_team);
-            name = MemExt.refreshString(MEM_OFFSET_name, NAME_LEN);
-            goals = MemExt.refreshInt32(MEM_OFFSET_goals);
-            assists = MemExt.refreshInt32(MEM_OFFSET_assists);
-
-            if (team == 0 || team == 1)
-            {
-                team_played[team] = true;
-            }
-
-            hasPlayed = true;
+            name = _name;
+            goals = _goals;
+            assists = _assists;
+            plusminus = _plusminus;
+            duplicate = addPlayerToList(this);
         }
 
-        public string getStats()
+        public string PlayerStats()
         {
-            return " (" + goals.ToString() + "-" + assists.ToString() + ")";
+            return name + "  " + goals.ToString() + "  " + assists.ToString() + "  " + plusminus.ToString();
         }
     }
 }

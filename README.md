@@ -1,8 +1,12 @@
 HockeyStatsExtractor
 ====================
-Stats Extractor For Hockey. Alpha build 0.2
+Stats Extractor For Hockey. Beta build 0.3 (Somewhat of a release candidate)
 
-Bugs and issues guaranteed until the release version.
+Update March 28 2014:
+
+The refactor and the PlayerHolder/Player disambiguation have been successfully completed. The code is mostly bug free. The week that follows should be a testing week that will be necessary to guarantee that the code is accurate and reliable for the league to depend upon it.
+
+If everything functions according to plan, it should be released in time for use in Week 8.
 
 --------------------
 
