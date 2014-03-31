@@ -34,7 +34,7 @@ namespace StatsExtractorConsole2
             {
                 _TEAM = value;
 
-                if (team == 0 || team == 1)
+                if ((_TEAM == 0 || _TEAM == 1) && inServer)
                 {
                     team_played[team] = true;
                     hasPlayed = true;
@@ -49,11 +49,45 @@ namespace StatsExtractorConsole2
 
         public bool[] team_played = { false, false };
         public string name;
-        public int goals;
-        public int assists;
+
+        private int _GOALS;
+        private int _ASSISTS;
+
+        public int goals
+        {
+            get
+            {
+                return _GOALS;
+            }
+
+            set
+            {
+                if (value > _GOALS && player != null)
+                {
+                    player.goals = value;
+                }
+                _GOALS = value;
+            }
+        }
+        public int assists
+        {
+            get
+            {
+                return _ASSISTS;
+            }
+
+            set
+            {
+                if (value > _ASSISTS && player != null)
+                {
+                    player.assists = value;
+                }
+                _ASSISTS = value;
+            }
+        }
+
         public bool onIce;
         public bool hasPlayed = false;
-        public int plusminus = 0;
 
         const int MEM_OFFSET_inServer = 0;
         const int MEM_OFFSET_position = 4;
@@ -61,10 +95,10 @@ namespace StatsExtractorConsole2
         const int MEM_OFFSET_name = 20;
         const int NAME_LEN = 24;
         const int MEM_OFFSET_goals = 136;
-        const int MEM_OFFSET_assists = 140;
-        const int MEM_OFFSET_LEN = 152;
+        const int MEM_OFFSET_assists = 140;     
+        const int MEM_OFFSET_LEN = 152;                                         
 
-        Player player;
+        Player player = null;
 
         private void checkNewPlayer()
         {
@@ -96,7 +130,6 @@ namespace StatsExtractorConsole2
         private void reset()
             //Resets the playerHolder to take in a new player. 
         {
-            plusminus = 0;
             refresh();
             checkNewPlayer();
         }

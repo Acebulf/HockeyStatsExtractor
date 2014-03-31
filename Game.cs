@@ -105,10 +105,10 @@ namespace StatsExtractorConsole2
         {
             if (Player.PlayerDict != null)
             {
-                foreach (string name in Player.PlayerDict.Keys)
-                {
-                    Console.WriteLine(name);
-                }
+                //foreach (string name in Player.PlayerDict.Keys)
+                //{
+                //    Console.WriteLine(name);
+                //}
 
                 writer.WriteLine("\n\n ------ Player stats ------");
                 writer.WriteLine("\n" + nameRed + "\n\n");
@@ -150,11 +150,10 @@ namespace StatsExtractorConsole2
                     continue;
                 }
 
-                //Debug step
-
-                if (timer.ElapsedMilliseconds >= 100)
+                //Calibration code
+                if (timer.ElapsedMilliseconds >= Program.LONG_INTERVAL)
                 {
-                    Console.WriteLine("Long interval: " + timer.ElapsedMilliseconds.ToString());
+                    Console.WriteLine("[WARNING] Long interval: " + timer.ElapsedMilliseconds.ToString());
                 }
 
                 timer.Restart();
@@ -260,19 +259,21 @@ namespace StatsExtractorConsole2
                             writer.WriteLine(toWrite);
                             Console.WriteLine("Players on ice: ");
 
-                            foreach (string name in OnIceNames)
-                            {
-                                Console.WriteLine(name);
-                            }
+                            //foreach (string name in OnIceNames)
+                            //{
+                            //    Console.WriteLine(name);
+                            //}
 
                             foreach (PlayerHolder player in OnIcePH)
                             {
                                 if (player.team == teamScored)
                                 {
+                                    Console.WriteLine("[+1] " + player.name);
                                     Player.PlayerDict[player.name].plusminus += 1;
                                 }
                                 else if (player.team != teamScored)
                                 {
+                                    Console.WriteLine("[-1] " + player.name);
                                     Player.PlayerDict[player.name].plusminus += -1;
                                 }
                             }
