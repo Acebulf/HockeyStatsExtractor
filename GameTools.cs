@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StatsExtractorConsole2
 {
-    class GameTools
+    abstract class GameTools
     {
         public MemoryExtractor MemExt;
         public Writer writer;
@@ -17,7 +17,7 @@ namespace StatsExtractorConsole2
         }
 
         public int[] getScore()
-        //getScore(processHandler)[0] returns score for red and (...)[1] returns score for blue.
+        //getScore()[0] returns score for red and (...)[1] returns score for blue.
         {
             int[] retVal = new int[2];
             retVal[0] = MemExt.getInt32(MEMLOC.RedScore);
@@ -87,6 +87,13 @@ namespace StatsExtractorConsole2
             if (MemExt.getInt32(MEMLOC.StopTime) == 0)
                 return false;
             return true;
+        }
+
+        public bool gameIsOver()
+        {
+            if (MemExt.getInt32(MEMLOC.GameOver) == 1)
+                return true;
+            return false;
         }
 
         protected List<PlayerHolder> getPlayers(ref int at_i)

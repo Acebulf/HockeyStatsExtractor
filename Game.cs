@@ -20,6 +20,12 @@ namespace StatsExtractorConsole2
         //bool periodEnd = false;
         bool timeStoppedHandled = false;
 
+        //Overlay for OBS Parameters
+        Overlay OBSOverlay;
+        const bool OVERLAY_ENABLED = false;
+        const string RED_SCORE_PATH = @"C:\Users\Acebulf\Desktop\hockey055f\hockeyace\final solution\redScore.txt";
+        const string BLUE_SCORE_PATH = @"C:\Users\Acebulf\Desktop\hockey055f\hockeyace\final solution\blueScore.txt";
+
         int at_i = MEMLOC.PlayerList;
 
         List<PlayerHolder> playerHolderList;
@@ -53,6 +59,12 @@ namespace StatsExtractorConsole2
             //All the operations that are executed at the initialization that are common
             //for all overloaded constructors.
         {
+            if (OVERLAY_ENABLED)
+            {
+                OBSOverlay = new Overlay(RED_SCORE_PATH, BLUE_SCORE_PATH);
+                Console.WriteLine("Overlay Enabled");
+            }
+
             Player.reinitialize(); //Make sure that the Player class' static variables are reset.
 
             MemExt = new MemoryExtractor();
@@ -159,7 +171,7 @@ namespace StatsExtractorConsole2
                 timer.Restart();
                 checkOnIce();
 
-                if (getTime() == 0 && getPeriod() >= 3 && getScore(0) != getScore(1))
+                if (gameIsOver())
                 {
                     gameOver();
                     return false;
@@ -294,6 +306,11 @@ namespace StatsExtractorConsole2
         {
             scoreRed = getScore(0);
             scoreBlue = getScore(1);
+
+            if (OVERLAY_ENABLED)
+            {
+                OBSOverlay.updateScore(scoreRed, scoreBlue);
+            }
         }
 
         public Game(string _nameRed, string _nameBlue)

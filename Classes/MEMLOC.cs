@@ -19,6 +19,7 @@ namespace StatsExtractorConsole2
         public const int Time = 0x07D349A8; //Type = Int32
         public const int Period = 0x07D349B0; //Type = Int32
         public const int StopTime = 0x07D33DA0; //Type = Int32
+        public const int GameOver = 0x07D349AC; //Type = Int32 (1 for Game Over, 0 otherwise)
 
         public const int RedScore = 0x07D33D98;
         public const int BlueScore = 0x07D33D9C;

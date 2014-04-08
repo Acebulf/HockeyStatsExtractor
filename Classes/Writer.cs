@@ -65,5 +65,14 @@ namespace StatsExtractorConsole2
                 Console.WriteLine(text);
             }
         }
+
+        public void WriteFile(string text)
+            //Overwrites file
+        {
+            using (StreamWriter file = new StreamWriter(FilePath, false))
+            {
+                file.WriteLine(text);
+            }
+        }
     }
 }
