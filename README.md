@@ -2,7 +2,14 @@ HockeyStatsExtractor
 ====================
 Stats Extractor For Hockey.
 
-Current Build: 0.3.1
+Current Build: 0.4.0
+--------------------
+Beta build 0.4.x (Second public release version)
+
+-> Added OBS overlay workings.
+
+-> Fixed bug where the game would not end after a goal was scored in OT.
+
 --------------------
 Beta build 0.3.x (Somewhat of a release candidate)
 
